@@ -279,7 +279,7 @@
       <div class="lbl">תשלום לכל תלמיד</div>
       <div class="val"><span id="kpiPer" data-count="0">0</span> ₪<span class="star">*</span></div>
       <div class="sub">לשנה כולה · תשלום אחד</div>
-      <a class="kpi-note" href="#partyNote"><b>*</b> לא כולל את <b>מסיבת הסיום הבית ספרית</b> — עבורה תידרש גבייה נפרדת</a>
+      <a class="kpi-note" href="#partyNote">*לא כולל מסיבת סיום בית ספרית</a>
       <a class="pay-btn" data-pay href="#" target="_blank" rel="noopener noreferrer">
         <span class="pi">💳</span><span>לתשלום בפייבוקס</span>
       </a>
@@ -356,8 +356,7 @@
     <div class="note reveal" id="partyNote">
       <div class="ic">🎉</div>
       <div>
-        <h3><span class="star">*</span> מסיבת הסיום הבית ספרית — גבייה נפרדת</h3>
-        <p><b>אינה כלולה בסכום של <span id="notePer">150</span> ₪.</b> עבורה תידרש גבייה נפרדת, בהתאם לתקציב בית הספר וכספי ההנהגה.</p>
+        <p><b>*לא כולל מסיבת סיום בית ספרית</b></p>
       </div>
     </div>
   </section>
@@ -427,7 +426,7 @@
       { name:"מסיבת סיום כיתתית", type:"student", per:40, who:"kids" },
       { name:"ארוחה כיתתית", type:"student", per:20, who:"kids" },
       { name:"מתנת סוף שנה למחנכת", type:"class", amount:190, who:"staff" } ],
-      alert:'<b>שימו לב:</b> מסיבת הסיום <b>הבית ספרית</b> אינה כלולה כאן — עבורה תידרש <b>גבייה נפרדת</b>.<span class="star">*</span>' }
+      alert:'*לא כולל מסיבת סיום בית ספרית' }
   ];
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -453,7 +452,6 @@
   document.getElementById("kpiTotal").dataset.count = total;
   document.getElementById("kpiEvents").dataset.count = EVENTS.length;
   document.getElementById("kpiN").textContent = STUDENTS;
-  document.getElementById("notePer").textContent = perStudent;
   document.getElementById("payPer").textContent = perStudent;
   document.querySelectorAll(".barPer").forEach(e => e.textContent = perStudent);
   document.getElementById("amtKids").innerHTML  = fmt(kids)  + `<small>${kidsPct}% · ${fmt(r2(kids/STUDENTS))} לילד</small>`;
