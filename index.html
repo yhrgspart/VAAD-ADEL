@@ -168,6 +168,31 @@
   .tap-hint b{display:inline-block;animation:tapPulse 1.4s ease-in-out infinite}
   @keyframes tapPulse{50%{transform:scale(1.25)}}
 
+  .flag{display:inline-block;width:1.25em;height:auto;vertical-align:-0.15em;border-radius:3px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+  .dot .flag{width:30px}
+  /* ===== Per-event icon motion ===== */
+  .ani{display:inline-block;line-height:1;will-change:transform}
+  .ani-wave{animation:wave 2.6s ease-in-out infinite;transform-origin:left center}
+  .ani-drip{animation:drip 2.4s ease-in-out infinite;transform-origin:50% 0}
+  @keyframes drip{0%,100%{transform:translateY(0) scaleY(1)}40%{transform:translateY(3px) scaleY(1.08) rotate(-4deg)}60%{transform:translateY(-2px) scaleY(.96) rotate(3deg)}}
+  .ani-flicker{animation:flicker 1.8s ease-in-out infinite;transform-origin:50% 100%}
+  @keyframes flicker{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(255,190,60,0))}
+    30%{transform:scale(1.06,1.1);filter:drop-shadow(0 -3px 6px rgba(255,190,60,.9))}
+    55%{transform:scale(.98,1.02);filter:drop-shadow(0 -2px 3px rgba(255,190,60,.5))}
+    75%{transform:scale(1.04,1.08);filter:drop-shadow(0 -3px 7px rgba(255,170,40,.85))}}
+  .ani-peek{animation:peek 2.8s ease-in-out infinite}
+  @keyframes peek{0%,100%{transform:rotate(0)}20%{transform:rotate(-18deg) translateX(-2px)}40%{transform:rotate(14deg) translateX(2px)}55%{transform:rotate(0) scale(1.12)}65%{transform:scale(1)}}
+  .ani-clink{animation:clink 2.6s ease-in-out infinite;transform-origin:50% 90%}
+  @keyframes clink{0%,60%,100%{transform:rotate(0)}70%{transform:rotate(-20deg)}78%{transform:rotate(8deg)}86%{transform:rotate(-6deg)}93%{transform:rotate(2deg)}}
+  .ani-hop{animation:hop 1.9s cubic-bezier(.3,.6,.4,1) infinite;transform-origin:50% 100%}
+  @keyframes hop{0%,100%{transform:translateY(0) scale(1,1)}10%{transform:translateY(0) scale(1.12,.88)}35%{transform:translateY(-9px) scale(.94,1.06) rotate(-8deg)}55%{transform:translateY(0) scale(1.08,.92)}65%{transform:scale(1)}}
+  .ani-wobble{animation:wobble 2.2s ease-in-out infinite}
+  @keyframes wobble{0%,100%{transform:skewX(0) scale(1)}25%{transform:skewX(-9deg) scale(1.05,.95)}50%{transform:skewX(7deg) scale(.96,1.04)}75%{transform:skewX(-4deg)}}
+  .ani-toss{animation:toss 2.8s ease-in-out infinite}
+  @keyframes toss{0%,55%,100%{transform:translateY(0) rotate(0)}70%{transform:translateY(-14px) rotate(-200deg)}82%{transform:translateY(-6px) rotate(-340deg)}92%{transform:translateY(0) rotate(-360deg)}}
+  .ev:not(.in) .ani{animation-play-state:paused}
+  @keyframes wave{0%,100%{transform:rotate(0) skewY(0)}25%{transform:rotate(-6deg) skewY(-3deg)}75%{transform:rotate(5deg) skewY(3deg)}}
+  .bar-row .flag{width:20px}
   .ripple{position:absolute;border-radius:50%;background:rgba(123,92,255,.18);transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none}
   @keyframes rip{to{transform:scale(4);opacity:0}}
 
@@ -367,26 +392,37 @@
   const PAYBOX_URL = "https://links.payboxapp.com/OW14p6YBf7b";
   const STUDENTS = 23;
 
+  // Israeli flag as inline SVG (the 🇮🇱 emoji shows as "IL" letters on Windows)
+  const IL_FLAG = `<svg class="flag" viewBox="0 0 220 160" role="img" aria-label="דגל ישראל">
+    <rect width="220" height="160" fill="#fff"/>
+    <rect y="15" width="220" height="25" fill="#0038b8"/>
+    <rect y="120" width="220" height="25" fill="#0038b8"/>
+    <g fill="none" stroke="#0038b8" stroke-width="5.5">
+      <path d="M110 52 L136.8 98.5 L83.2 98.5 Z"/>
+      <path d="M110 108 L83.2 61.5 L136.8 61.5 Z"/>
+    </g>
+  </svg>`;
+
   // ===== Data (committee budget sheet, adjusted to 23 students → 150 ₪ per child) =====
   const EVENTS = [
-    { name:"חגי תשרי", icon:"🍯", items:[
+    { name:"חגי תשרי", anim:"drip", icon:"🍯", items:[
       { name:"שי למחנכת", type:"class", amount:150, who:"staff" },
       { name:"שי לצוות בית הספר", type:"class", amount:15, who:"staff" } ]},
-    { name:"חנוכה", icon:"🕎", items:[
+    { name:"חנוכה", anim:"flicker", icon:"🕎", items:[
       { name:"סופגניות לכל הילדים", type:"student", per:5, who:"kids" } ]},
-    { name:"פורים", icon:"🎭", items:[
+    { name:"פורים", anim:"peek", icon:"🎭", items:[
       { name:"משלוח מנות אחיד לכל ילד (מרוכז ע״י הוועדים)", type:"student", per:15, who:"kids" },
       { name:"מארז למחנכת", type:"class", amount:150, who:"staff" } ]},
-    { name:"פסח", icon:"🍷", items:[
+    { name:"פסח", anim:"clink", icon:"🍷", items:[
       { name:"מתנה למחנכת", type:"class", amount:150, who:"staff" },
       { name:"מארז לחדר המורים", type:"class", amount:15, who:"staff" } ]},
-    { name:"יום המורה", icon:"🍎", items:[
+    { name:"יום המורה", anim:"hop", icon:"🍎", items:[
       { name:"הוקרה למורים", type:"class", amount:20, who:"staff" } ]},
-    { name:"יום העצמאות", icon:"🇮🇱", items:[
+    { name:"יום העצמאות", anim:"wave", icon:IL_FLAG, items:[
       { name:"ארוחה כיתתית", type:"student", per:20, who:"kids" } ]},
-    { name:"שבועות", icon:"🧀", items:[
+    { name:"שבועות", anim:"wobble", icon:"🧀", items:[
       { name:"ארוחה כיתתית", type:"student", per:20, who:"kids" } ]},
-    { name:"סוף שנה", icon:"🎓", items:[
+    { name:"סוף שנה", anim:"toss", icon:"🎓", items:[
       { name:"מסיבת סיום כיתתית", type:"student", per:40, who:"kids" },
       { name:"ארוחה כיתתית", type:"student", per:20, who:"kids" },
       { name:"מתנת סוף שנה למחנכת", type:"class", amount:190, who:"staff" } ],
@@ -426,7 +462,7 @@
 
   // ===== Timeline =====
   const tl = document.getElementById("timeline");
-  EVENTS.forEach(ev => {
+  EVENTS.forEach((ev, i) => {
     const rows = ev.items.map((it, j) => `
       <div class="item" style="transition-delay:${0.08 * (j + 1)}s">
         <span class="tag ${it.who}">${it.who === "kids" ? "לילדים" : "לצוות"}</span>
@@ -437,7 +473,7 @@
       </div>`).join("");
     tl.insertAdjacentHTML("beforeend", `
       <div class="ev reveal from-side">
-        <div class="dot">${ev.icon}</div>
+        <div class="dot"><span class="ani ani-${ev.anim}" style="animation-delay:${(i*0.37).toFixed(2)}s">${ev.icon}</span></div>
         <div class="ev-card" role="button" tabindex="0" aria-expanded="false">
           <div class="ev-head"><h3>${ev.name}</h3><span class="tot">${fmt(ev.total)} <span class="chev">▼</span></span></div>
           ${ev.alert ? `<div class="ev-alert"><span class="ic">🎉</span><span>${ev.alert}</span></div>` : ""}
