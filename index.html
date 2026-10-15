@@ -48,7 +48,7 @@
     100%{transform:translateY(-110vh) rotate(360deg);opacity:0}
   }
 
-  .scroll-hint{position:absolute;bottom:96px;left:50%;transform:translateX(-50%);z-index:3;font-size:13px;opacity:.9;display:flex;flex-direction:column;align-items:center;gap:2px}
+  .scroll-hint{position:relative;z-index:3;margin:22px auto 0;width:max-content;font-size:13px;opacity:.9;display:flex;flex-direction:column;align-items:center;gap:2px}
   .scroll-hint i{width:22px;height:34px;border:2px solid #fff;border-radius:12px;position:relative}
   .scroll-hint i::after{content:"";position:absolute;top:6px;left:50%;width:4px;height:8px;margin-left:-2px;background:#fff;border-radius:2px;animation:wheel 1.6s infinite}
   @keyframes wheel{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(12px)}}
