@@ -2,7 +2,8 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#ff5e7e">
 <title>לאן הולך כסף ועד הכיתה? | שקיפות להורים</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -14,140 +15,249 @@
     --accent:#14b8a6; --shadow:0 10px 30px rgba(31,35,64,.08);
     --radius:20px;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:"Heebo",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
-  .wrap{max-width:1050px;margin:0 auto;padding:0 18px 60px}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth;overflow-x:hidden}
+  html,body{max-width:100%;overflow-x:clip}
+  body{font-family:"Heebo",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden}
+  .wrap{max-width:1050px;margin:0 auto;padding:0 16px calc(60px + env(safe-area-inset-bottom))}
 
-  /* HERO */
+  #progress{position:fixed;top:0;right:0;height:4px;width:0;z-index:50;
+    background:linear-gradient(90deg,#7b5cff,#ff5e7e,#ff8a3d);border-radius:0 0 0 4px;transition:width .1s linear}
+
+  /* ===== HERO ===== */
   header{
     background:linear-gradient(135deg,#ff8a3d 0%,#ff5e7e 45%,#7b5cff 100%);
-    color:#fff;padding:56px 18px 110px;text-align:center;position:relative;overflow:hidden
+    background-size:200% 200%;animation:gradMove 10s ease infinite;
+    color:#fff;padding:56px 18px 120px;text-align:center;position:relative;overflow:hidden
   }
+  @keyframes gradMove{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
   header::after{content:"";position:absolute;inset:auto -10% -60px -10%;height:120px;background:var(--bg);border-radius:50% 50% 0 0}
-  header .emoji{font-size:46px}
-  header h1{font-size:clamp(28px,5vw,46px);font-weight:800;margin:6px 0 8px}
-  header p{font-size:clamp(16px,2.4vw,20px);opacity:.95;max-width:640px;margin:0 auto}
+  header .emoji{font-size:50px;display:inline-block;animation:bounce 2.2s ease-in-out infinite}
+  @keyframes bounce{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-12px) rotate(-6deg)}60%{transform:translateY(0) rotate(4deg)}}
+  header h1{font-size:clamp(28px,7vw,46px);font-weight:800;margin:6px 0 8px;animation:fadeUp .8s .1s both}
+  header p{font-size:clamp(16px,4vw,20px);opacity:.95;max-width:640px;margin:0 auto;animation:fadeUp .8s .3s both}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 
-  /* KPI */
+  .floaters{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .floaters span{position:absolute;bottom:-40px;font-size:22px;opacity:0;animation:floatUp linear infinite}
+  @keyframes floatUp{
+    0%{transform:translateY(0) rotate(0);opacity:0}
+    10%{opacity:.85}
+    90%{opacity:.85}
+    100%{transform:translateY(-110vh) rotate(360deg);opacity:0}
+  }
+
+  .scroll-hint{position:absolute;bottom:96px;left:50%;transform:translateX(-50%);z-index:3;font-size:13px;opacity:.9;display:flex;flex-direction:column;align-items:center;gap:2px}
+  .scroll-hint i{width:22px;height:34px;border:2px solid #fff;border-radius:12px;position:relative}
+  .scroll-hint i::after{content:"";position:absolute;top:6px;left:50%;width:4px;height:8px;margin-left:-2px;background:#fff;border-radius:2px;animation:wheel 1.6s infinite}
+  @keyframes wheel{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(12px)}}
+
+  /* ===== KPI ===== */
   .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:-80px;position:relative;z-index:2}
-  .kpi{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;text-align:center}
+  .kpi{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;text-align:center;position:relative;overflow:hidden}
   .kpi .lbl{color:var(--muted);font-size:15px}
-  .kpi .val{font-size:clamp(30px,5vw,44px);font-weight:800;line-height:1.2}
+  .kpi .val{font-size:clamp(32px,8vw,44px);font-weight:800;line-height:1.2}
   .kpi .sub{font-size:13px;color:var(--muted)}
-  .kpi.main{background:linear-gradient(135deg,#14b8a6,#0ea5e9);color:#fff}
+  .kpi.main{background:linear-gradient(135deg,#14b8a6,#0ea5e9);color:#fff;animation:pulseGlow 2.8s ease-in-out infinite}
   .kpi.main .lbl,.kpi.main .sub{color:rgba(255,255,255,.9)}
+  @keyframes pulseGlow{0%,100%{box-shadow:0 10px 30px rgba(14,165,233,.25)}50%{box-shadow:0 10px 40px rgba(14,165,233,.6)}}
+  .kpi.main::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;pointer-events:none;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);animation:shine 3.5s ease-in-out infinite}
+  @keyframes shine{0%,60%{left:-60%}100%{left:130%}}
+
+  /* asterisk + separate-collection notices */
+  .star{color:#f5c542;font-weight:800;font-size:.7em;vertical-align:super;margin-inline-start:3px;display:inline-block;
+    animation:starPulse 1.6s ease-in-out infinite;text-shadow:0 0 8px rgba(245,197,66,.8)}
+  .kpi.main .star{color:#ffe27a}
+  @keyframes starPulse{50%{transform:scale(1.3) rotate(12deg)}}
+  .kpi-note{display:block;position:relative;z-index:1;margin-top:12px;background:rgba(255,255,255,.2);border:1.5px dashed rgba(255,255,255,.8);border-radius:12px;
+    padding:9px 10px;font-size:14px;line-height:1.45;color:#fff;text-decoration:none;font-weight:600;transition:transform .2s}
+  .kpi-note b{color:#ffe27a}
+  .kpi-note:active{transform:scale(.97)}
+  .ev-alert{margin-top:12px;background:#fffbea;border:2px dashed #f5c542;border-radius:14px;padding:10px 12px;font-size:14px;line-height:1.5;display:flex;gap:8px;align-items:flex-start}
+  .ev-alert .ic{font-size:20px;display:inline-block;animation:party 2s ease-in-out infinite}
+  .note{scroll-margin-top:20px}
+  .note.flash{animation:flash 1.2s ease 2}
+  @keyframes flash{50%{box-shadow:0 0 0 6px rgba(245,197,66,.45);transform:scale(1.02)}}
 
   section{margin-top:44px}
-  h2{font-size:clamp(22px,3.4vw,30px);font-weight:800;margin-bottom:6px}
+  h2{font-size:clamp(22px,6vw,30px);font-weight:800;margin-bottom:6px}
   .lead{color:var(--muted);margin-bottom:20px}
 
-  /* SPLIT */
+  /* ===== Reveal on scroll ===== */
+  .reveal{opacity:0;transform:translateY(34px) scale(.98);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+  .reveal.from-side{transform:translateX(-40px)}
+  .reveal.pop{transform:scale(.85)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ===== SPLIT ===== */
   .split{display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:center;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
-  .donut{position:relative;width:100%;max-width:300px;margin:auto}
+  .donut{position:relative;width:100%;max-width:280px;margin:auto}
   .donut svg{width:100%;height:auto;transform:rotate(-90deg)}
   .donut .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-  .donut .center b{font-size:42px;font-weight:800;color:var(--kids);line-height:1}
+  .donut .center b{font-size:44px;font-weight:800;color:var(--kids);line-height:1}
   .donut .center span{font-size:14px;color:var(--muted);max-width:140px}
+  .donut.done .center b{animation:popNum .5s ease}
+  @keyframes popNum{50%{transform:scale(1.25)}}
   .legend{display:grid;gap:14px}
-  .leg{display:flex;gap:14px;align-items:center;padding:16px;border-radius:16px}
+  .leg{display:flex;gap:14px;align-items:center;padding:16px;border-radius:16px;transition:transform .2s}
+  .leg:active{transform:scale(.97)}
   .leg.kids{background:var(--kids-soft)} .leg.staff{background:var(--staff-soft)}
-  .leg .ic{font-size:30px}
+  .leg .ic{font-size:30px;display:inline-block}
+  .leg.in .ic{animation:wiggle 1s .4s ease}
+  @keyframes wiggle{20%{transform:rotate(-15deg) scale(1.2)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(4deg)}}
   .leg h3{font-size:18px}
   .leg .amt{margin-inline-start:auto;text-align:left;font-weight:800;font-size:22px;white-space:nowrap}
   .leg .amt small{display:block;font-weight:400;font-size:13px;color:var(--muted)}
   .leg p{font-size:14px;color:var(--muted)}
 
-  /* TIMELINE */
+  /* ===== TIMELINE ===== */
   .timeline{position:relative;display:grid;gap:18px}
-  .timeline::before{content:"";position:absolute;top:10px;bottom:10px;right:27px;width:4px;border-radius:4px;background:linear-gradient(#ff8a3d,#7b5cff)}
+  .timeline .line{position:absolute;top:10px;right:27px;width:4px;height:0;border-radius:4px;background:linear-gradient(#ff8a3d,#7b5cff);transition:height .15s linear}
   .ev{display:grid;grid-template-columns:58px 1fr;gap:14px;align-items:start}
-  .dot{width:58px;height:58px;border-radius:50%;background:#fff;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:28px;position:relative;z-index:1;border:4px solid #fff}
-  .ev-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;transition:transform .2s}
-  .ev-card:hover{transform:translateY(-3px)}
-  .ev-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+  .dot{width:58px;height:58px;border-radius:50%;background:#fff;box-shadow:var(--shadow);display:flex;align-items:center;justify-content:center;font-size:28px;position:relative;z-index:1;border:4px solid #fff;transform:scale(0);transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+  .ev.in .dot{transform:scale(1)}
+  .ev.in .dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:3px solid var(--kids);animation:ring 1.2s ease-out forwards}
+  @keyframes ring{from{transform:scale(1);opacity:.8}to{transform:scale(1.7);opacity:0}}
+  .ev-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;cursor:pointer;
+    transition:transform .2s,box-shadow .2s;user-select:none;position:relative;overflow:hidden}
+  .ev-card:active{transform:scale(.98)}
+  .ev-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
   .ev-head h3{font-size:20px;font-weight:800}
-  .ev-head .tot{font-weight:800;color:var(--accent);font-size:18px}
-  .item{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px dashed #e5e7f0}
-  .item:first-of-type{border-top:none}
+  .ev-head .tot{font-weight:800;color:var(--accent);font-size:17px;display:flex;align-items:center;gap:8px}
+  .chev{display:inline-block;transition:transform .35s;font-size:14px;color:var(--muted)}
+  .ev-card.open .chev{transform:rotate(180deg)}
+  .ev-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.2,.8,.2,1)}
+  .ev-card.open .ev-body{grid-template-rows:1fr}
+  .ev-body>div{overflow:hidden}
+  .ev-body .inner{padding-top:8px}
+  .item{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px dashed #e5e7f0;opacity:0;transform:translateX(-14px);transition:opacity .4s,transform .4s}
+  .ev-card.open .item{opacity:1;transform:none}
   .tag{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
   .tag.kids{background:var(--kids-soft);color:#c2410c}
   .tag.staff{background:var(--staff-soft);color:#5b3fd6}
-  .item .name{flex:1}
+  .item .name{flex:1;font-size:15px}
   .item .money{text-align:left;white-space:nowrap;font-weight:600}
   .item .money small{display:block;font-weight:400;font-size:12px;color:var(--muted)}
+  .tap-hint{font-size:13px;color:var(--muted);text-align:center;margin-top:-8px;margin-bottom:14px}
+  .tap-hint b{display:inline-block;animation:tapPulse 1.4s ease-in-out infinite}
+  @keyframes tapPulse{50%{transform:scale(1.25)}}
 
-  /* BAR */
-  .bars{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;display:grid;gap:12px}
+  .ripple{position:absolute;border-radius:50%;background:rgba(123,92,255,.18);transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none}
+  @keyframes rip{to{transform:scale(4);opacity:0}}
+
+  /* ===== BARS ===== */
+  .bars{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;display:grid;gap:14px}
   .bar-row{display:grid;grid-template-columns:150px 1fr 80px;gap:12px;align-items:center;font-size:15px}
   .bar{height:16px;background:#eef0f7;border-radius:999px;overflow:hidden}
-  .bar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#7b5cff,#ff8a3d);transition:width 1.2s ease}
+  .bar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#7b5cff,#ff8a3d);transition:width 1.2s cubic-bezier(.2,.8,.2,1);position:relative}
+  .bar i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);background-size:200% 100%;animation:barShine 2.2s linear infinite}
+  @keyframes barShine{from{background-position:200% 0}to{background-position:-200% 0}}
   .bar-row b{text-align:left}
 
-  /* NOTE + FAQ */
+  /* ===== NOTE + HOW ===== */
   .note{background:#fffbea;border:2px dashed #f5c542;border-radius:var(--radius);padding:20px 22px;display:flex;gap:14px;align-items:flex-start}
-  .note .ic{font-size:30px}
+  .note .ic{font-size:30px;display:inline-block;animation:party 2s ease-in-out infinite}
+  @keyframes party{0%,100%{transform:rotate(0)}25%{transform:rotate(-14deg) scale(1.1)}75%{transform:rotate(14deg) scale(1.1)}}
   .how{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
   .how .box{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
   .how h3{font-size:18px;margin-bottom:6px}
   .formula{direction:ltr;text-align:center;font-weight:800;font-size:18px;background:var(--bg);border-radius:12px;padding:10px;margin-top:10px}
-  footer{text-align:center;color:var(--muted);margin-top:50px;font-size:15px}
-  footer .heart{font-size:28px}
 
+  footer{text-align:center;color:var(--muted);margin-top:50px;font-size:15px}
+  footer .heart{font-size:32px;display:inline-block;animation:beat 1.2s ease-in-out infinite}
+  @keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.25)}30%{transform:scale(1)}45%{transform:scale(1.18)}}
+
+  #toTop{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));width:48px;height:48px;border:none;border-radius:50%;
+    background:linear-gradient(135deg,#ff5e7e,#7b5cff);color:#fff;font-size:22px;box-shadow:0 8px 20px rgba(123,92,255,.4);
+    opacity:0;transform:translateY(20px) scale(.8);transition:all .35s;pointer-events:none;z-index:40}
+  #toTop.show{opacity:1;transform:none;pointer-events:auto}
+  #toTop:active{transform:scale(.9)}
+
+  .confetti{position:fixed;top:-12px;width:9px;height:14px;z-index:60;pointer-events:none;border-radius:2px;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+  /* ===== Mobile ===== */
   @media (max-width:820px){
-    .kpis{grid-template-columns:1fr}
-    .split{grid-template-columns:1fr}
+    header{padding:46px 16px 120px}
+    .kpis{grid-template-columns:1fr;gap:12px}
+    .kpi{padding:18px}
+    .split{grid-template-columns:1fr;padding:20px}
     .how{grid-template-columns:1fr}
-    .bar-row{grid-template-columns:110px 1fr 64px;font-size:14px}
+    .bar-row{grid-template-columns:105px 1fr 64px;font-size:14px;gap:8px}
+    .leg{padding:14px}
+    .leg .amt{font-size:19px}
+    .ev{grid-template-columns:50px 1fr;gap:10px}
+    .dot{width:50px;height:50px;font-size:24px}
+    .timeline .line{right:23px}
+    .ev-head h3{font-size:18px}
   }
-  @media print{header{-webkit-print-color-adjust:exact;print-color-adjust:exact}.ev-card:hover{transform:none}}
+  @media (hover:hover){
+    .ev-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(31,35,64,.13)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important}
+    .reveal,.item{opacity:1!important;transform:none!important}
+    .dot{transform:none!important}
+  }
+  @media print{
+    header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .reveal,.item{opacity:1!important;transform:none!important}
+    .ev-body{grid-template-rows:1fr!important}
+    #toTop,#progress,.floaters,.scroll-hint{display:none}
+  }
 </style>
 </head>
 <body>
+<div id="progress"></div>
 
 <header>
+  <div class="floaters" id="floaters"></div>
   <div class="emoji">🎒💛</div>
   <h1>לאן הולך כסף ועד הכיתה?</h1>
   <p>שקיפות מלאה להורים: כל שקל שנאסף, על מה הוא מוצא ומתי — לאורך כל שנת הלימודים</p>
+  <div class="scroll-hint"><i></i></div>
 </header>
 
 <div class="wrap">
 
   <div class="kpis">
-    <div class="kpi main">
+    <div class="kpi main reveal pop" id="kpiMain">
       <div class="lbl">תשלום לכל תלמיד</div>
-      <div class="val" id="kpiPer">143 ₪</div>
+      <div class="val"><span id="kpiPer" data-count="0">0</span> ₪<span class="star">*</span></div>
       <div class="sub">לשנה כולה · תשלום אחד</div>
+      <a class="kpi-note" href="#partyNote"><b>*</b> לא כולל את <b>מסיבת הסיום הבית ספרית</b> — עבורה תידרש גבייה נפרדת</a>
     </div>
-    <div class="kpi">
+    <div class="kpi reveal pop">
       <div class="lbl">תקציב כיתתי שנתי</div>
-      <div class="val" id="kpiTotal">4,300 ₪</div>
-      <div class="sub">מחושב לכיתה של <span id="kpiN">30</span> תלמידים</div>
+      <div class="val"><span id="kpiTotal" data-count="0">0</span> ₪</div>
+      <div class="sub">מחושב לכיתה של <span id="kpiN">23</span> תלמידים</div>
     </div>
-    <div class="kpi">
+    <div class="kpi reveal pop">
       <div class="lbl">אירועים וחגים</div>
-      <div class="val" id="kpiEvents">9</div>
+      <div class="val"><span id="kpiEvents" data-count="0">0</span></div>
       <div class="sub">מתשרי ועד סוף השנה</div>
     </div>
   </div>
 
   <section>
-    <h2>במבט אחד 👀</h2>
-    <p class="lead">רוב הכסף חוזר ישירות לילדים — ארוחות, כיבודים ומסיבות.</p>
-    <div class="split">
-      <div class="donut">
+    <h2 class="reveal">במבט אחד 👀</h2>
+    <p class="lead reveal">רוב הכסף חוזר ישירות לילדים — ארוחות, כיבודים ומסיבות.</p>
+    <div class="split reveal" id="splitBox">
+      <div class="donut" id="donut">
         <svg viewBox="0 0 42 42" aria-hidden="true">
           <circle cx="21" cy="21" r="15.915" fill="none" stroke="#efeaff" stroke-width="6"></circle>
-          <circle id="arcKids" cx="21" cy="21" r="15.915" fill="none" stroke="#ff8a3d" stroke-width="6" stroke-dasharray="0 100" stroke-linecap="round" style="transition:stroke-dasharray 1.4s ease"></circle>
+          <circle id="arcKids" cx="21" cy="21" r="15.915" fill="none" stroke="#ff8a3d" stroke-width="6" stroke-dasharray="0 100" stroke-linecap="round" style="transition:stroke-dasharray 1.6s cubic-bezier(.2,.8,.2,1)"></circle>
         </svg>
         <div class="center"><b id="pctKids">0%</b><span>מהכסף הולך ישירות לילדים</span></div>
       </div>
       <div class="legend">
-        <div class="leg kids">
+        <div class="leg kids reveal from-side">
           <div class="ic">🧒</div>
-          <div><h3>לילדים</h3><p>סופגניות, משלוחי מנות, ארוחות כיתתיות ומסיבת סיום</p></div>
+          <div><h3>לילדים</h3><p>סופגניות, משלוחי מנות, ארוחות כיתתיות ומסיבת סיום כיתתית</p></div>
           <div class="amt" id="amtKids"></div>
         </div>
-        <div class="leg staff">
+        <div class="leg staff reveal from-side">
           <div class="ic">🍎</div>
           <div><h3>הוקרה לצוות</h3><p>מתנות למחנכת ושי קטן לצוות בית הספר ולחדר המורים</p></div>
           <div class="amt" id="amtStaff"></div>
@@ -157,55 +267,57 @@
   </section>
 
   <section>
-    <h2>לאורך השנה 🗓️</h2>
-    <p class="lead">כל אירוע, מה כולל, כמה עולה לכיתה — וכמה זה יוצא לכל ילד.</p>
-    <div class="timeline" id="timeline"></div>
+    <h2 class="reveal">לאורך השנה 🗓️</h2>
+    <p class="lead reveal">כל אירוע, מה כולל, כמה עולה לכיתה — וכמה זה יוצא לכל ילד.</p>
+    <p class="tap-hint reveal"><b>👆</b> לחצו על אירוע כדי לפתוח / לסגור פירוט</p>
+    <div class="timeline" id="timeline"><div class="line" id="tlLine"></div></div>
   </section>
 
   <section>
-    <h2>איפה הכסף הגדול? 📊</h2>
-    <p class="lead">סך העלות של כל תקופה בשנה, מהגבוה לנמוך.</p>
-    <div class="bars" id="bars"></div>
+    <h2 class="reveal">איפה הכסף הגדול? 📊</h2>
+    <p class="lead reveal">סך העלות של כל תקופה בשנה, מהגבוה לנמוך.</p>
+    <div class="bars reveal" id="bars"></div>
   </section>
 
   <section>
-    <h2>איך חישבנו? 🧮</h2>
-    <p class="lead">שני סוגי הוצאות — ושניהם מתחלקים בשווה בין כל התלמידים.</p>
+    <h2 class="reveal">איך חישבנו? 🧮</h2>
+    <p class="lead reveal">שני סוגי הוצאות — ושניהם מתחלקים בשווה בין כל התלמידים.</p>
     <div class="how">
-      <div class="box">
+      <div class="box reveal from-side">
         <h3><span class="tag kids">לפי תלמיד</span> &nbsp;סכום קבוע לכל ילד</h3>
         <p>לדוגמה: ארוחה כיתתית — 20 ₪ לכל ילד, כפול מספר הילדים בכיתה.</p>
-        <div class="formula">20 ₪ × 30 = 600 ₪</div>
+        <div class="formula" id="fStudent"></div>
       </div>
-      <div class="box">
+      <div class="box reveal from-side">
         <h3><span class="tag staff">כיתתי</span> &nbsp;סכום אחד לכל הכיתה</h3>
         <p>לדוגמה: מתנה למחנכת — 150 ₪ לכיתה, מתחלק בין כל הילדים.</p>
-        <div class="formula">150 ₪ ÷ 30 = 5 ₪</div>
+        <div class="formula" id="fClass"></div>
       </div>
     </div>
   </section>
 
   <section>
-    <div class="note">
+    <div class="note reveal" id="partyNote">
       <div class="ic">🎉</div>
       <div>
-        <h3>מסיבת סוף שנה (בית ספרית)</h3>
-        <p>אינה כלולה בסכום זה. הגבייה עבורה תיעשה בנפרד, בהתאם לתקציב בית הספר וכספי ההנהגה.</p>
+        <h3><span class="star">*</span> מסיבת הסיום הבית ספרית — גבייה נפרדת</h3>
+        <p><b>אינה כלולה בסכום של <span id="notePer">150</span> ₪.</b> עבורה תידרש גבייה נפרדת, בהתאם לתקציב בית הספר וכספי ההנהגה.</p>
       </div>
     </div>
   </section>
 
-  <footer>
+  <footer class="reveal" id="footer">
     <div class="heart">💛</div>
     <p>תודה לכל ההורים על השותפות! לכל שאלה — ועד ההורים הכיתתי זמין עבורכם.</p>
   </footer>
 </div>
 
+<button id="toTop" aria-label="חזרה למעלה">↑</button>
+
 <script>
-  // ===== Data (from the committee budget sheet, 30 students) =====
-  const STUDENTS = 30;
-  // type: "student" = fixed amount per child; "class" = one amount for the whole class
-  // who:  "kids" or "staff"
+(function(){
+  // ===== Data (committee budget sheet, adjusted to 23 students → 150 ₪ per child) =====
+  const STUDENTS = 23;
   const EVENTS = [
     { name:"חגי תשרי", icon:"🍯", items:[
       { name:"שי למחנכת", type:"class", amount:150, who:"staff" },
@@ -227,71 +339,201 @@
     { name:"סוף שנה", icon:"🎓", items:[
       { name:"מסיבת סיום כיתתית", type:"student", per:40, who:"kids" },
       { name:"ארוחה כיתתית", type:"student", per:20, who:"kids" },
-      { name:"מתנת סוף שנה למחנכת", type:"class", amount:200, who:"staff" } ]}
+      { name:"מתנת סוף שנה למחנכת", type:"class", amount:190, who:"staff" } ],
+      alert:'<b>שימו לב:</b> מסיבת הסיום <b>הבית ספרית</b> אינה כלולה כאן — עבורה תידרש <b>גבייה נפרדת</b>.<span class="star">*</span>' }
   ];
 
-  // ===== Helpers =====
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const fmt = n => n.toLocaleString("he-IL", { maximumFractionDigits: 2 }) + " ₪";
+  const r2 = n => Math.round(n * 100) / 100;
   const classCost = it => it.type === "student" ? it.per * STUDENTS : it.amount;
   const perChild  = it => it.type === "student" ? it.per : it.amount / STUDENTS;
 
   // ===== Totals =====
-  let total = 0, kids = 0, staff = 0, itemCount = 0;
+  let total = 0, kids = 0, staff = 0;
   EVENTS.forEach(ev => {
     ev.total = ev.items.reduce((s, it) => s + classCost(it), 0);
-    ev.items.forEach(it => { itemCount++; it.who === "kids" ? kids += classCost(it) : staff += classCost(it); });
+    ev.items.forEach(it => { if (it.who === "kids") kids += classCost(it); else staff += classCost(it); });
     total += ev.total;
   });
   const perStudent = Math.round(total / STUDENTS);
   const kidsPct = Math.round(kids / total * 100);
 
-  document.getElementById("kpiTotal").textContent = fmt(total);
-  document.getElementById("kpiPer").textContent = fmt(perStudent);
+  document.getElementById("kpiPer").dataset.count = perStudent;
+  document.getElementById("kpiTotal").dataset.count = total;
+  document.getElementById("kpiEvents").dataset.count = EVENTS.length;
   document.getElementById("kpiN").textContent = STUDENTS;
-  document.getElementById("kpiEvents").textContent = EVENTS.length;
-  document.getElementById("amtKids").innerHTML  = fmt(kids)  + `<small>${kidsPct}% · ${fmt(kids/STUDENTS)} לילד</small>`;
-  document.getElementById("amtStaff").innerHTML = fmt(staff) + `<small>${100-kidsPct}% · ${fmt(Math.round(staff/STUDENTS*100)/100)} לילד</small>`;
+  document.getElementById("notePer").textContent = perStudent;
+  document.getElementById("amtKids").innerHTML  = fmt(kids)  + `<small>${kidsPct}% · ${fmt(r2(kids/STUDENTS))} לילד</small>`;
+  document.getElementById("amtStaff").innerHTML = fmt(staff) + `<small>${100-kidsPct}% · ${fmt(r2(staff/STUDENTS))} לילד</small>`;
+  document.getElementById("fStudent").textContent = `20 ₪ × ${STUDENTS} = ${(20*STUDENTS).toLocaleString("he-IL")} ₪`;
+  document.getElementById("fClass").textContent = `150 ₪ ÷ ${STUDENTS} ≈ ${r2(150/STUDENTS)} ₪`;
 
   // ===== Timeline =====
   const tl = document.getElementById("timeline");
   EVENTS.forEach(ev => {
-    const rows = ev.items.map(it => `
-      <div class="item">
+    const rows = ev.items.map((it, j) => `
+      <div class="item" style="transition-delay:${0.08 * (j + 1)}s">
         <span class="tag ${it.who}">${it.who === "kids" ? "לילדים" : "לצוות"}</span>
         <span class="name">${it.name}</span>
         <span class="money">${fmt(classCost(it))}
-          <small>${it.type === "student" ? `${it.per} ₪ × ${STUDENTS} ילדים` : `≈ ${fmt(Math.round(perChild(it)*100)/100)} לילד`}</small>
+          <small>${it.type === "student" ? `${it.per} ₪ × ${STUDENTS} ילדים` : `≈ ${fmt(r2(perChild(it)))} לילד`}</small>
         </span>
       </div>`).join("");
     tl.insertAdjacentHTML("beforeend", `
-      <div class="ev">
+      <div class="ev reveal from-side">
         <div class="dot">${ev.icon}</div>
-        <div class="ev-card">
-          <div class="ev-head"><h3>${ev.name}</h3><span class="tot">${fmt(ev.total)} לכיתה</span></div>
-          ${rows}
+        <div class="ev-card" role="button" tabindex="0" aria-expanded="false">
+          <div class="ev-head"><h3>${ev.name}</h3><span class="tot">${fmt(ev.total)} <span class="chev">▼</span></span></div>
+          ${ev.alert ? `<div class="ev-alert"><span class="ic">🎉</span><span>${ev.alert}</span></div>` : ""}
+          <div class="ev-body"><div><div class="inner">${rows}</div></div></div>
         </div>
       </div>`);
+  });
+
+  function ripple(el, e){
+    if (reduceMotion) return;
+    const r = el.getBoundingClientRect();
+    const size = Math.max(r.width, r.height) / 2;
+    const x = (e && e.clientX != null ? e.clientX : r.left + r.width / 2) - r.left - size / 2;
+    const y = (e && e.clientY != null ? e.clientY : r.top + r.height / 2) - r.top - size / 2;
+    const s = document.createElement("span");
+    s.className = "ripple";
+    s.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px`;
+    el.appendChild(s);
+    s.addEventListener("animationend", () => s.remove());
+  }
+  function toggle(card, e){
+    const open = card.classList.toggle("open");
+    card.setAttribute("aria-expanded", open);
+    ripple(card, e);
+  }
+  tl.querySelectorAll(".ev-card").forEach(card => {
+    card.addEventListener("click", e => toggle(card, e));
+    card.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(card); } });
+  });
+
+  // asterisk link → flash the separate-collection note
+  document.querySelector(".kpi-note").addEventListener("click", () => {
+    const n = document.getElementById("partyNote");
+    n.classList.add("in"); n.classList.remove("flash"); void n.offsetWidth;
+    setTimeout(() => n.classList.add("flash"), 500);
   });
 
   // ===== Bars =====
   const bars = document.getElementById("bars");
   const max = Math.max(...EVENTS.map(e => e.total));
-  [...EVENTS].sort((a, b) => b.total - a.total).forEach(ev => {
+  [...EVENTS].sort((a, b) => b.total - a.total).forEach((ev, i) => {
     bars.insertAdjacentHTML("beforeend", `
       <div class="bar-row">
         <span>${ev.icon} ${ev.name}</span>
-        <div class="bar"><i data-w="${(ev.total / max * 100).toFixed(1)}"></i></div>
+        <div class="bar"><i data-w="${(ev.total / max * 100).toFixed(1)}" style="transition-delay:${i * 0.1}s"></i></div>
         <b>${fmt(ev.total)}</b>
       </div>`);
   });
 
-  // ===== Animations =====
-  requestAnimationFrame(() => setTimeout(() => {
+  // ===== Floating emojis in hero =====
+  if (!reduceMotion) {
+    const fl = document.getElementById("floaters");
+    const sym = ["🪙","💛","⭐","🍩","🎉","🍎","✨"];
+    const count = window.innerWidth < 600 ? 9 : 16;
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement("span");
+      s.textContent = sym[i % sym.length];
+      s.style.left = (Math.random() * 85) + "%";
+      s.style.fontSize = (16 + Math.random() * 16) + "px";
+      s.style.animationDuration = (7 + Math.random() * 7) + "s";
+      s.style.animationDelay = (Math.random() * 8) + "s";
+      fl.appendChild(s);
+    }
+  }
+
+  function countUp(el){
+    const target = +el.dataset.count;
+    if (reduceMotion) { el.textContent = target.toLocaleString("he-IL"); return; }
+    const dur = 1300, t0 = performance.now();
+    (function step(t){
+      const p = Math.min(1, (t - t0) / dur);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased).toLocaleString("he-IL");
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+
+  let donutDone = false;
+  function runDonut(){
+    if (donutDone) return; donutDone = true;
     document.getElementById("arcKids").setAttribute("stroke-dasharray", `${kidsPct} ${100 - kidsPct}`);
-    document.querySelectorAll(".bar i").forEach(b => b.style.width = b.dataset.w + "%");
-    let c = 0; const el = document.getElementById("pctKids");
-    const t = setInterval(() => { c++; el.textContent = c + "%"; if (c >= kidsPct) clearInterval(t); }, 18);
-  }, 250));
+    const el = document.getElementById("pctKids");
+    if (reduceMotion) { el.textContent = kidsPct + "%"; return; }
+    let c = 0;
+    const t = setInterval(() => {
+      c++; el.textContent = c + "%";
+      if (c >= kidsPct) { clearInterval(t); document.getElementById("donut").classList.add("done"); }
+    }, 18);
+  }
+
+  let confettiDone = false;
+  function confetti(){
+    if (confettiDone || reduceMotion) return; confettiDone = true;
+    const colors = ["#ff8a3d","#ff5e7e","#7b5cff","#14b8a6","#f5c542"];
+    const n = window.innerWidth < 600 ? 40 : 70;
+    for (let i = 0; i < n; i++) {
+      const c = document.createElement("div");
+      c.className = "confetti";
+      c.style.left = Math.random() * 100 + "vw";
+      c.style.background = colors[i % colors.length];
+      c.style.animationDuration = (2 + Math.random() * 2) + "s";
+      c.style.animationDelay = (Math.random() * 0.6) + "s";
+      document.body.appendChild(c);
+      c.addEventListener("animationend", () => c.remove());
+    }
+  }
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (!en.isIntersecting) return;
+      const el = en.target;
+      el.classList.add("in");
+      el.querySelectorAll("[data-count]").forEach(countUp);
+      if (el.id === "splitBox") setTimeout(runDonut, 250);
+      if (el.id === "bars") el.querySelectorAll(".bar i").forEach(b => b.style.width = b.dataset.w + "%");
+      if (el.id === "footer") confetti();
+      io.unobserve(el);
+    });
+  }, { threshold: 0.18, rootMargin: "0px 0px -40px 0px" });
+
+  document.querySelectorAll(".reveal").forEach(el => {
+    const sibs = [...el.parentElement.children].filter(c => c.classList.contains("reveal"));
+    el.style.transitionDelay = (sibs.indexOf(el) % 4) * 0.08 + "s";
+    io.observe(el);
+  });
+
+  const first = tl.querySelector(".ev-card");
+  const obs = new IntersectionObserver(([en]) => {
+    if (en.isIntersecting) { setTimeout(() => { first.classList.add("open"); first.setAttribute("aria-expanded", true); }, 500); obs.disconnect(); }
+  }, { threshold: 0.6 });
+  obs.observe(first);
+
+  const prog = document.getElementById("progress");
+  const line = document.getElementById("tlLine");
+  const toTop = document.getElementById("toTop");
+  let ticking = false;
+  function onScroll(){
+    const h = document.documentElement;
+    const m = h.scrollHeight - h.clientHeight;
+    prog.style.width = (m > 0 ? (h.scrollTop / m) * 100 : 0) + "%";
+    const r = tl.getBoundingClientRect();
+    const visible = Math.min(Math.max(window.innerHeight * 0.75 - r.top, 0), r.height - 20);
+    line.style.height = visible + "px";
+    toTop.classList.toggle("show", h.scrollTop > 600);
+    ticking = false;
+  }
+  window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  window.addEventListener("resize", onScroll);
+  onScroll();
+  toTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }));
+})();
 </script>
 </body>
 </html>
