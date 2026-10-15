@@ -14,12 +14,13 @@
     --staff:#7b5cff; --staff-soft:#efeaff;
     --accent:#14b8a6; --shadow:0 10px 30px rgba(31,35,64,.08);
     --radius:20px;
+    --paybox:#0bb3e8; --paybox2:#1d5df0;
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html{scroll-behavior:smooth;overflow-x:hidden}
   html,body{max-width:100%;overflow-x:clip}
   body{font-family:"Heebo",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden}
-  .wrap{max-width:1050px;margin:0 auto;padding:0 16px calc(60px + env(safe-area-inset-bottom))}
+  .wrap{max-width:1050px;margin:0 auto;padding:0 16px calc(110px + env(safe-area-inset-bottom))}
 
   #progress{position:fixed;top:0;right:0;height:4px;width:0;z-index:50;
     background:linear-gradient(90deg,#7b5cff,#ff5e7e,#ff8a3d);border-radius:0 0 0 4px;transition:width .1s linear}
@@ -65,7 +66,6 @@
     background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);animation:shine 3.5s ease-in-out infinite}
   @keyframes shine{0%,60%{left:-60%}100%{left:130%}}
 
-  /* asterisk + separate-collection notices */
   .star{color:#f5c542;font-weight:800;font-size:.7em;vertical-align:super;margin-inline-start:3px;display:inline-block;
     animation:starPulse 1.6s ease-in-out infinite;text-shadow:0 0 8px rgba(245,197,66,.8)}
   .kpi.main .star{color:#ffe27a}
@@ -79,6 +79,31 @@
   .note{scroll-margin-top:20px}
   .note.flash{animation:flash 1.2s ease 2}
   @keyframes flash{50%{box-shadow:0 0 0 6px rgba(245,197,66,.45);transform:scale(1.02)}}
+
+  /* ===== PayBox buttons ===== */
+  .pay-btn{display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;color:#fff;font-weight:800;
+    background:linear-gradient(135deg,var(--paybox),var(--paybox2));border-radius:16px;padding:14px 18px;font-size:18px;
+    box-shadow:0 10px 24px rgba(29,93,240,.35);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+  .pay-btn::before{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;pointer-events:none;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.45),transparent);animation:shine 3s ease-in-out infinite}
+  .pay-btn:active{transform:scale(.96)}
+  .pay-btn .pi{font-size:22px;display:inline-block;animation:coin 2.4s ease-in-out infinite}
+  @keyframes coin{0%,70%,100%{transform:rotateY(0)}85%{transform:rotateY(180deg)}}
+  .pay-btn small{display:block;font-weight:400;font-size:12px;opacity:.9;line-height:1.2}
+  .kpi.main .pay-btn{margin-top:12px;background:#fff;color:var(--paybox2);box-shadow:0 8px 20px rgba(0,0,0,.15);z-index:1}
+  .kpi.main .pay-btn small{color:var(--muted)}
+  .pay-section{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px;text-align:center}
+  .pay-section h2{margin-bottom:4px}
+  .pay-section .pay-btn{max-width:420px;margin:16px auto 0;font-size:20px;padding:16px 20px;animation:payPulse 2.4s ease-in-out infinite}
+  @keyframes payPulse{0%,100%{box-shadow:0 10px 24px rgba(29,93,240,.35)}50%{box-shadow:0 10px 34px rgba(29,93,240,.6),0 0 0 6px rgba(11,179,232,.15)}}
+  .pay-section .fine{font-size:13px;color:var(--muted);margin-top:10px}
+
+  /* sticky bottom pay bar */
+  #payBar{position:fixed;right:0;left:0;bottom:0;z-index:45;padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    background:rgba(255,255,255,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    box-shadow:0 -6px 24px rgba(31,35,64,.12);transform:translateY(110%);transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+  #payBar.show{transform:none}
+  #payBar .pay-btn{max-width:520px;margin:0 auto;padding:12px 16px;font-size:17px}
 
   section{margin-top:44px}
   h2{font-size:clamp(22px,6vw,30px);font-weight:800;margin-bottom:6px}
@@ -170,8 +195,9 @@
 
   #toTop{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom));width:48px;height:48px;border:none;border-radius:50%;
     background:linear-gradient(135deg,#ff5e7e,#7b5cff);color:#fff;font-size:22px;box-shadow:0 8px 20px rgba(123,92,255,.4);
-    opacity:0;transform:translateY(20px) scale(.8);transition:all .35s;pointer-events:none;z-index:40}
+    opacity:0;transform:translateY(20px) scale(.8);transition:all .35s;pointer-events:none;z-index:46}
   #toTop.show{opacity:1;transform:none;pointer-events:auto}
+  #toTop.lift{bottom:calc(86px + env(safe-area-inset-bottom))}
   #toTop:active{transform:scale(.9)}
 
   .confetti{position:fixed;top:-12px;width:9px;height:14px;z-index:60;pointer-events:none;border-radius:2px;animation:fall linear forwards}
@@ -194,6 +220,7 @@
   }
   @media (hover:hover){
     .ev-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(31,35,64,.13)}
+    .pay-btn:hover{transform:translateY(-2px)}
   }
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important;transition:none!important}
@@ -204,7 +231,7 @@
     header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .reveal,.item{opacity:1!important;transform:none!important}
     .ev-body{grid-template-rows:1fr!important}
-    #toTop,#progress,.floaters,.scroll-hint{display:none}
+    #toTop,#progress,.floaters,.scroll-hint,#payBar{display:none}
   }
 </style>
 </head>
@@ -227,6 +254,9 @@
       <div class="val"><span id="kpiPer" data-count="0">0</span> ₪<span class="star">*</span></div>
       <div class="sub">לשנה כולה · תשלום אחד</div>
       <a class="kpi-note" href="#partyNote"><b>*</b> לא כולל את <b>מסיבת הסיום הבית ספרית</b> — עבורה תידרש גבייה נפרדת</a>
+      <a class="pay-btn" data-pay href="#" target="_blank" rel="noopener noreferrer">
+        <span class="pi">💳</span><span>לתשלום בפייבוקס</span>
+      </a>
     </div>
     <div class="kpi reveal pop">
       <div class="lbl">תקציב כיתתי שנתי</div>
@@ -306,18 +336,38 @@
     </div>
   </section>
 
+  <section>
+    <div class="pay-section reveal pop" id="paySection">
+      <h2>מוכנים לתשלום? 💙</h2>
+      <p class="lead" style="margin-bottom:0">תשלום של <b><span id="payPer">150</span> ₪</b> לכל ילד, דרך קבוצת הפייבוקס של הכיתה</p>
+      <a class="pay-btn" data-pay href="#" target="_blank" rel="noopener noreferrer">
+        <span class="pi">💳</span><span>לתשלום בפייבוקס</span>
+      </a>
+      <p class="fine">הקישור נפתח באפליקציית PayBox</p>
+    </div>
+  </section>
+
   <footer class="reveal" id="footer">
     <div class="heart">💛</div>
     <p>תודה לכל ההורים על השותפות! לכל שאלה — ועד ההורים הכיתתי זמין עבורכם.</p>
   </footer>
 </div>
 
+<div id="payBar">
+  <a class="pay-btn" data-pay href="#" target="_blank" rel="noopener noreferrer">
+    <span class="pi">💳</span><span>לתשלום <span class="barPer">150</span> ₪ בפייבוקס</span>
+  </a>
+</div>
+
 <button id="toTop" aria-label="חזרה למעלה">↑</button>
 
 <script>
 (function(){
-  // ===== Data (committee budget sheet, adjusted to 23 students → 150 ₪ per child) =====
+  // ===== Settings =====
+  const PAYBOX_URL = "https://links.payboxapp.com/OW14p6YBf7b";
   const STUDENTS = 23;
+
+  // ===== Data (committee budget sheet, adjusted to 23 students → 150 ₪ per child) =====
   const EVENTS = [
     { name:"חגי תשרי", icon:"🍯", items:[
       { name:"שי למחנכת", type:"class", amount:150, who:"staff" },
@@ -349,6 +399,9 @@
   const classCost = it => it.type === "student" ? it.per * STUDENTS : it.amount;
   const perChild  = it => it.type === "student" ? it.per : it.amount / STUDENTS;
 
+  // ===== PayBox links =====
+  document.querySelectorAll("[data-pay]").forEach(a => a.href = PAYBOX_URL);
+
   // ===== Totals =====
   let total = 0, kids = 0, staff = 0;
   EVENTS.forEach(ev => {
@@ -364,6 +417,8 @@
   document.getElementById("kpiEvents").dataset.count = EVENTS.length;
   document.getElementById("kpiN").textContent = STUDENTS;
   document.getElementById("notePer").textContent = perStudent;
+  document.getElementById("payPer").textContent = perStudent;
+  document.querySelectorAll(".barPer").forEach(e => e.textContent = perStudent);
   document.getElementById("amtKids").innerHTML  = fmt(kids)  + `<small>${kidsPct}% · ${fmt(r2(kids/STUDENTS))} לילד</small>`;
   document.getElementById("amtStaff").innerHTML = fmt(staff) + `<small>${100-kidsPct}% · ${fmt(r2(staff/STUDENTS))} לילד</small>`;
   document.getElementById("fStudent").textContent = `20 ₪ × ${STUDENTS} = ${(20*STUDENTS).toLocaleString("he-IL")} ₪`;
@@ -413,7 +468,6 @@
     card.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(card); } });
   });
 
-  // asterisk link → flash the separate-collection note
   document.querySelector(".kpi-note").addEventListener("click", () => {
     const n = document.getElementById("partyNote");
     n.classList.add("in"); n.classList.remove("flash"); void n.offsetWidth;
@@ -515,17 +569,30 @@
   }, { threshold: 0.6 });
   obs.observe(first);
 
+  // ===== Sticky pay bar: show only when neither top nor bottom pay buttons are visible =====
+  const payBar = document.getElementById("payBar");
+  const toTop = document.getElementById("toTop");
+  const anchors = [document.querySelector("#kpiMain .pay-btn"), document.querySelector("#paySection .pay-btn")];
+  const visible = new Set();
+  const payObs = new IntersectionObserver(entries => {
+    entries.forEach(en => en.isIntersecting ? visible.add(en.target) : visible.delete(en.target));
+    const show = visible.size === 0;
+    payBar.classList.toggle("show", show);
+    toTop.classList.toggle("lift", show);
+  }, { threshold: 0 });
+  anchors.forEach(a => payObs.observe(a));
+
+  // ===== Scroll: progress, timeline line, back-to-top =====
   const prog = document.getElementById("progress");
   const line = document.getElementById("tlLine");
-  const toTop = document.getElementById("toTop");
   let ticking = false;
   function onScroll(){
     const h = document.documentElement;
     const m = h.scrollHeight - h.clientHeight;
     prog.style.width = (m > 0 ? (h.scrollTop / m) * 100 : 0) + "%";
     const r = tl.getBoundingClientRect();
-    const visible = Math.min(Math.max(window.innerHeight * 0.75 - r.top, 0), r.height - 20);
-    line.style.height = visible + "px";
+    const vis = Math.min(Math.max(window.innerHeight * 0.75 - r.top, 0), r.height - 20);
+    line.style.height = vis + "px";
     toTop.classList.toggle("show", h.scrollTop > 600);
     ticking = false;
   }
