@@ -287,7 +287,8 @@
     <div class="kpi reveal pop">
       <div class="lbl">תקציב כיתתי שנתי</div>
       <div class="val"><span id="kpiTotal" data-count="0">0</span> ₪</div>
-      <div class="sub">מחושב לכיתה של <span id="kpiN">23</span> תלמידים</div>
+      <div class="sub">מחושב לכיתה של <span id="kpiN">22</span> תלמידים × 200 ₪</div>
+      <div class="sub" id="budgetSummary" aria-live="polite"></div>
     </div>
     <div class="kpi reveal pop">
       <div class="lbl">אירועים וחגים</div>
@@ -380,7 +381,7 @@
 
 <div id="payBar">
   <a class="pay-btn" data-pay href="#" target="_blank" rel="noopener noreferrer">
-    <span class="pi">💳</span><span>לתשלום <span class="barPer">150</span> ₪ בפייבוקס</span>
+    <span class="pi">💳</span><span>לתשלום <span class="barPer">200</span> ₪ בפייבוקס</span>
   </a>
 </div>
 
@@ -390,7 +391,9 @@
 (function(){
   // ===== Settings =====
   const PAYBOX_URL = "https://links.payboxapp.com/OW14p6YBf7b";
-  const STUDENTS = 23;
+  const STUDENTS = 22;
+  const PAYMENT_PER_CHILD = 200;
+  const BUDGET = STUDENTS * PAYMENT_PER_CHILD;
 
   // Israeli flag as inline SVG (the 🇮🇱 emoji shows as "IL" letters on Windows)
   const IL_FLAG = `<svg class="flag" viewBox="0 0 220 160" role="img" aria-label="דגל ישראל">
@@ -403,27 +406,31 @@
     </g>
   </svg>`;
 
-  // ===== Data (committee budget sheet, adjusted to 23 students → 150 ₪ per child) =====
+  // ===== Data (committee budget sheet, adjusted to 22 students → 200 ₪ per child) =====
   const EVENTS = [
     { name:"חגי תשרי", anim:"drip", icon:"🍯", items:[
       { name:"שי למחנכת", type:"class", amount:150, who:"staff" },
       { name:"שי לצוות בית הספר", type:"class", amount:15, who:"staff" } ]},
     { name:"חנוכה", anim:"flicker", icon:"🕎", items:[
-      { name:"סופגניות לכל הילדים", type:"student", per:5, who:"kids" } ]},
+      { name:"מתנה מתוקה לכל ילד", type:"student", per:8, who:"kids" } ]},
     { name:"פורים", anim:"peek", icon:"🎭", items:[
       { name:"משלוח מנות אחיד לכל ילד (מרוכז ע״י הוועדים)", type:"student", per:15, who:"kids" },
       { name:"מארז למחנכת", type:"class", amount:150, who:"staff" } ]},
     { name:"פסח", anim:"clink", icon:"🍷", items:[
       { name:"מתנה למחנכת", type:"class", amount:150, who:"staff" },
-      { name:"מארז לחדר המורים", type:"class", amount:15, who:"staff" } ]},
+      { name:"מארז לחדר המורים", type:"class", amount:120, who:"staff" },
+      { name:"מארז מתוק לילדים", type:"student", per:10, who:"kids" } ]},
     { name:"יום המורה", anim:"hop", icon:"🍎", items:[
-      { name:"הוקרה למורים", type:"class", amount:20, who:"staff" } ]},
+      { name:"הוקרה למורים", type:"class", amount:120, who:"staff" } ]},
     { name:"יום העצמאות", anim:"wave", icon:IL_FLAG, items:[
+      { name:"מתנה לילדים", type:"student", per:10, who:"kids" },
       { name:"ארוחה כיתתית", type:"student", per:20, who:"kids" } ]},
     { name:"שבועות", anim:"wobble", icon:"🧀", items:[
+      { name:"מתנה לילדים", type:"student", per:10, who:"kids" },
       { name:"ארוחה כיתתית", type:"student", per:20, who:"kids" } ]},
     { name:"סוף שנה", anim:"toss", icon:"🎓", items:[
-      { name:"מסיבת סיום כיתתית", type:"student", per:40, who:"kids" },
+      { name:"מתנה לילדים", type:"student", per:15, who:"kids" },
+      { name:"מסיבת סיום כיתתית", type:"student", per:30, who:"kids" },
       { name:"ארוחה כיתתית", type:"student", per:20, who:"kids" },
       { name:"מתנת סוף שנה למחנכת", type:"class", amount:190, who:"staff" } ],
       alert:'*לא כולל מסיבת סיום בית ספרית' }
@@ -445,11 +452,12 @@
     ev.items.forEach(it => { if (it.who === "kids") kids += classCost(it); else staff += classCost(it); });
     total += ev.total;
   });
-  const perStudent = Math.round(total / STUDENTS);
+  const perStudent = PAYMENT_PER_CHILD;
   const kidsPct = Math.round(kids / total * 100);
 
   document.getElementById("kpiPer").dataset.count = perStudent;
-  document.getElementById("kpiTotal").dataset.count = total;
+  document.getElementById("kpiTotal").dataset.count = BUDGET;
+  document.getElementById("budgetSummary").textContent = `תקציב: ${fmt(BUDGET)} | הוצאות מתוכננות: ${fmt(total)} | יתרה: ${fmt(BUDGET - total)}`;
   document.getElementById("kpiEvents").dataset.count = EVENTS.length;
   document.getElementById("kpiN").textContent = STUDENTS;
   document.getElementById("payPer").textContent = perStudent;
